@@ -2,51 +2,82 @@ package com.bridgelab.emloyeeWage;
 
 import java.util.Scanner;
 
-//UC-8 Employee monthly salary for multiple company.
+//UC-9 Employee monthly salary for multiple company .
 
 public class EmployeeWageComputation {
-	public static void wage(String companyName, int WAGE_PER_HR, int MAX_WORKING_DAYS, int MAX_WORKING_HRS) {
-		final int PART_TIME = 1;
-		final int FULL_TIME = 2;
+	static final int PART_TIME = 1;
+    static final int FULL_TIME = 2;
+    // instance constants
+    final String COMPANY_NAME;
+    final int WAGE_PER_HR;
+    final int MAX_WORKING_DAYS;
+    final int MAX_WORKING_HRS;
+    // instance variable
+    int totalWage;
 
-		int totalWage = 0;
-		int workingHrs = 0;
-		for (int day = 1, totalWorkingHrs = 0; day <= MAX_WORKING_DAYS
-				&& totalWorkingHrs < MAX_WORKING_HRS; day++, totalWorkingHrs += workingHrs) {
+    EmployeeWageComputation(String companyName, int wagePerHr, int maxWorkingDays, int maxWorkingHrs)
+    {
+        COMPANY_NAME = companyName;
+        WAGE_PER_HR = wagePerHr;
+        MAX_WORKING_DAYS = maxWorkingDays;
+        MAX_WORKING_HRS = maxWorkingHrs;
+        totalWage = 0;
+    }
 
-			int empType = (int) (Math.random() * 100) % 3;
-			switch (empType) {
-			case FULL_TIME:
-				workingHrs = 8;
-				break;
-			case PART_TIME:
-				workingHrs = 4;
-				break;
-			default:
-				workingHrs = 0;
-				break;
-			}
-			int wage = workingHrs * WAGE_PER_HR;
-			totalWage += wage;
-		}
-		System.out.println("Total wage of  " + companyName + "  for a month is  " + totalWage);
-	}
+    int generateEmployeeType()
+    {
+        return (int) (Math.random() * 100) % 3;
+    }
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Enter number of company");
-		int numOfComp = sc.nextInt();
-		for (int i = 1; i <= numOfComp; i++) {
-			System.out.println("Enter company details");
-			System.out.println("Enter company name");
-			String compName = sc.next();
-			System.out.println("Enter Wage per hour for : " + compName);
-			int WagePerHr = sc.nextInt();
-			System.out.println("Enter maximum working day for : " + compName);
-			int maxWorkDay = sc.nextInt();
-			System.out.println("Enter maximum working hour for  : " + compName);
-			int maxWorkHr = sc.nextInt();
-			wage(compName, WagePerHr, maxWorkDay, maxWorkHr);
-		}
-	}
+    int getWorkingHrs(int empType)
+    {
+        switch (empType)
+        {
+            case FULL_TIME:
+                return 8;
+            case PART_TIME:
+                return 4;
+            default:
+                return 0;
+        }
+    }
+
+    void calculateTotalWage()
+    {
+        System.out.println("Computation of total wage of " + COMPANY_NAME + " employee");
+        System.out.printf("%5s     %5s     %5s     %5s\n", "Day", "Workinghrs", "Wage", "Total working hrs");
+        int workingHrs;
+        for (int day = 1, totalWorkingHrs = 0; day <= MAX_WORKING_DAYS
+                && totalWorkingHrs <= MAX_WORKING_HRS; day++, totalWorkingHrs += workingHrs)
+        {
+            int empType = generateEmployeeType();
+            workingHrs = getWorkingHrs(empType);
+            int wage = workingHrs * WAGE_PER_HR;
+            totalWage += wage;
+            System.out.printf("%5d       %5d      %5d      %5d\n", day, workingHrs, wage, totalWorkingHrs + workingHrs);
+        }
+
+    }
+
+    public String toString()
+    {
+        System.out.println("Details of " + COMPANY_NAME + " employee");
+        System.out.println("Wage per hour:" + WAGE_PER_HR);
+        System.out.println("Maximum working days:" + MAX_WORKING_DAYS);
+        System.out.println("Maximum working hours:" + MAX_WORKING_HRS);
+        return "Total wage for a month of " + COMPANY_NAME + " employee is " + totalWage + "\n";
+    }
+
+    public static void main(String args[])
+    {
+        EmployeeWageComputation tata = new EmployeeWageComputation("Tata", 20, 24, 100);
+        EmployeeWageComputation bajaj= new EmployeeWageComputation("bajaj", 15, 20, 80);
+
+        tata.calculateTotalWage();
+        System.out.println(tata);
+
+        bajaj.calculateTotalWage();
+        System.out.println(bajaj);
+    }
+	
 }
